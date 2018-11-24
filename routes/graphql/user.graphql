@@ -1,0 +1,23 @@
+type Mutation {
+    createUser(
+        name: String @rules(apply: ["required", "max:255"])
+        email: String @rules(apply: ["required", "email", "unique:users,email"])
+        password: String @bcrypt
+    ): User @create(model: "App\\User")
+    updateUser(
+        id: ID @rules(apply: ["required"])
+        name: String
+        email: String @rules(apply: ["email"])
+    ): User @update(model: "App\\User")
+    deleteUser(
+        id: ID @rules(apply: ["required"])
+    ): User @delete(model: "App\\User")
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

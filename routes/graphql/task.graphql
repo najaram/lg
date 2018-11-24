@@ -1,0 +1,20 @@
+type Task {
+    id: ID!
+    title: String!
+    description: String
+    user: User @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Mutation @group(middleware: ["auth:api"]) {
+    createTask(
+        title: String @rules(apply: ["required", "max:255"])
+        description: String @rules(apply: ["required"])
+    ): Task
+    @inject(context: "user.id", name: "userId")
+}
+
+extend type Query @group(middleware: ["auth:api"]) {
+    task(id: ID! @eq): Task @find
+}
